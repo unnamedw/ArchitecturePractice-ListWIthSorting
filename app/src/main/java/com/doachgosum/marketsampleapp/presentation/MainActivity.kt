@@ -3,14 +3,21 @@ package com.doachgosum.marketsampleapp.presentation
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
+import android.window.OnBackInvokedCallback
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.activity.viewModels
+import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.doachgosum.marketsampleapp.constant.LogTag
 import com.doachgosum.marketsampleapp.databinding.ActivityMainBinding
 import com.doachgosum.marketsampleapp.presentation.market.MarketListView
 import com.doachgosum.marketsampleapp.presentation.util.getAppContainer
+import com.doachgosum.marketsampleapp.presentation.util.showToast
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -52,5 +59,18 @@ class MainActivity : AppCompatActivity() {
         TabLayoutMediator(binding.tabLayout, binding.vpContents) { tab, index ->
             tab.text = tabTitle[index]
         }.attach()
+    }
+
+    private var lastBackPressed: Long = 0L
+    override fun onBackPressed() {
+        val tmp = System.currentTimeMillis()
+
+        if (tmp - lastBackPressed > 2000L) {
+            showToast("'뒤로' 버튼을 한번 더 누르면 종료됩니다")
+        } else {
+            onBackPressedDispatcher.onBackPressed()
+        }
+
+        lastBackPressed = tmp
     }
 }
