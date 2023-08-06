@@ -1,6 +1,7 @@
 package com.doachgosum.marketsampleapp.di
 
 import android.content.Context
+import com.doachgosum.marketsampleapp.data.local.AppDatabase
 import com.doachgosum.marketsampleapp.data.local.AppPreferences
 import com.doachgosum.marketsampleapp.data.remote.service.MarketService
 import com.doachgosum.marketsampleapp.data.repository.MarketRepositoryImpl
@@ -15,6 +16,7 @@ class AppContainer(
     private val ioDispatcher: CoroutineDispatcher by lazy { Dispatchers.IO }
 
     /** Local cache **/
+    private val db: AppDatabase by lazy { DatabaseModule.providesAppDatabase(context) }
     private val prefs: AppPreferences by lazy { AppPreferences(context) }
 
     /** API Service **/

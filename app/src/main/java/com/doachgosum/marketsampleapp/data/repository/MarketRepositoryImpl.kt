@@ -29,6 +29,10 @@ class MarketRepositoryImpl(
         return@withContext marketDao.saveFavoriteMarket(currencyPair)
     }
 
+    override suspend fun deleteFavoriteMarket(currencyPair: Pair<String, String>) {
+        marketDao.deleteFavoriteMarket(currencyPair)
+    }
+
     override suspend fun getFavoriteMarket(): List<Pair<String, String>> = withContext(ioDispatcher) {
         return@withContext marketDao.getFavoriteMarket()
     }

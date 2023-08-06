@@ -33,10 +33,22 @@ class AppPreferences(context: Context): MarketDao {
     }
 
     override suspend fun saveFavoriteMarket(currencyPair: Pair<String, String>) {
+        updateFavoriteMarket(currencyPair, true)
+    }
+
+    override suspend fun deleteFavoriteMarket(currencyPair: Pair<String, String>) {
+        updateFavoriteMarket(currencyPair, false)
+    }
+    
+    private suspend fun updateFavoriteMarket(currencyPair: Pair<String, String>, toBeSaved: Boolean) {
         val updatedData = getFavoriteMarket()
             .toMutableSet()
             .also {
-                it.add(currencyPair)
+                if (toBeSaved) {
+                    it.add(currencyPair)
+                } else {
+                    it.remove(currencyPair)
+                }
             }
             .toList()
 

@@ -9,6 +9,8 @@ interface MarketRepository {
 
     suspend fun saveFavoriteMarket(currencyPair: Pair<String, String>)
 
+    suspend fun deleteFavoriteMarket(currencyPair: Pair<String, String>)
+
     /**
      * return -> Market 의 Currency Pair List
      * **/

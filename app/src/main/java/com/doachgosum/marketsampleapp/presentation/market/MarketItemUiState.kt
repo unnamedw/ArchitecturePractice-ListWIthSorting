@@ -6,7 +6,7 @@ import com.doachgosum.marketsampleapp.domain.model.MarketModel
 data class MarketItemUiState(
     val market: MarketModel,
     val isFavorite: Boolean = false,
-    val onFavoriteClick: (MarketModel) -> Unit
+    val onFavoriteClick: (market: MarketModel, toBe: Boolean) -> Unit
 ) {
 
     val signTextColorResId: Int = when {
