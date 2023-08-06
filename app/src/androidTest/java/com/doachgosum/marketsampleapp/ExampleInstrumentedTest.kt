@@ -2,6 +2,8 @@ package com.doachgosum.marketsampleapp
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,8 +19,14 @@ import org.junit.Assert.*
 class ExampleInstrumentedTest {
     @Test
     fun useAppContext() {
-        // Context of the app under test.
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.doachgosum.marketsampleapp", appContext.packageName)
+        val gson = Gson()
+        val set: Set<Pair<String, String>> = setOf("철수" to "영희", "강남" to "강북")
+            .also { println(it) }
+
+        val json = gson.toJson(set)
+            .also { println(it) }
+
+        gson.fromJson<Set<Pair<String, String>>>(json, object : TypeToken<Set<Pair<String, String>>>(){}.type)
+            .also { println(it) }
     }
 }

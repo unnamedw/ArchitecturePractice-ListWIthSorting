@@ -21,6 +21,8 @@ fun Double.toMarketFormat(): String {
 /***
  * Pair.first() -> 값
  * Pair.second() -> 단위
+ *
+ * 단위의 경우 값이 백만 이상인 경우만 '백만' 이라는 단위 값이 존재하며, 그 외에는 null
  * */
 fun Double.toMarketVolumeFormat(): Pair<String, String?> {
     return try {

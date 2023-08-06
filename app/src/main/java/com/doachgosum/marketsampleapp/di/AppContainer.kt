@@ -27,7 +27,7 @@ class AppContainer(
         MarketRepositoryImpl(
             ioDispatcher = ioDispatcher,
             marketService = marketService,
-            preferences = prefs
+            marketDao = prefs
         )
     }
 
