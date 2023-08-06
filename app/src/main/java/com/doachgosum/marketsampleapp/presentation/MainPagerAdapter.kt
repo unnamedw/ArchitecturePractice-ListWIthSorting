@@ -1,12 +1,11 @@
 package com.doachgosum.marketsampleapp.presentation
 
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.doachgosum.marketsampleapp.constant.LogTag
-import com.doachgosum.marketsampleapp.databinding.LayoutMainPagerBinding
 
 class MainPagerAdapter(
     vararg page: View
@@ -19,13 +18,14 @@ class MainPagerAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainPagerViewHolder {
-        return MainPagerViewHolder(
-            LayoutMainPagerBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
+        val containerView = FrameLayout(parent.context).apply {
+            layoutParams = FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
             )
-        )
+        }
+
+        return MainPagerViewHolder(containerView)
     }
 
     override fun getItemCount(): Int {
@@ -38,12 +38,12 @@ class MainPagerAdapter(
     }
 
     class MainPagerViewHolder(
-        private val binding: LayoutMainPagerBinding
-    ): RecyclerView.ViewHolder(binding.root) {
+        private val containerView: ViewGroup
+    ): RecyclerView.ViewHolder(containerView) {
 
         fun bind(pageView: View) {
-            binding.root.removeAllViews()
-            binding.root.addView(pageView)
+            containerView.removeAllViews()
+            containerView.addView(pageView)
         }
     }
 
