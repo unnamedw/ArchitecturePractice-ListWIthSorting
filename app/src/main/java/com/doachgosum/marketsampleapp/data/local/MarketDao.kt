@@ -4,7 +4,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface MarketDao {
 
-    suspend fun getFavoriteMarket(): List<Pair<String, String>>
+    fun getFavoriteMarket(): List<Pair<String, String>>
 
     suspend fun saveFavoriteMarket(currencyPair: Pair<String, String>)
     

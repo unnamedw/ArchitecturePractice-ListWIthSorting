@@ -9,6 +9,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.doachgosum.marketsampleapp.constant.LogTag
 import com.doachgosum.marketsampleapp.databinding.ActivityMainBinding
+import com.doachgosum.marketsampleapp.presentation.market.ListType
 import com.doachgosum.marketsampleapp.presentation.market.MarketListFragment
 import com.doachgosum.marketsampleapp.presentation.util.getAppContainer
 import com.doachgosum.marketsampleapp.presentation.util.showToast
@@ -23,8 +24,8 @@ class MainActivity : AppCompatActivity() {
         MainViewModel.Factory(getAppContainer().marketRepository)
     }
 
-    private val homeMarketListFragment: MarketListFragment = MarketListFragment()
-    private val favoriteMarketListFragment: MarketListFragment = MarketListFragment()
+    private val homeMarketListFragment: MarketListFragment = MarketListFragment.newInstance(ListType.Main)
+    private val favoriteMarketListFragment: MarketListFragment = MarketListFragment.newInstance(ListType.Favorite)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,23 +34,18 @@ class MainActivity : AppCompatActivity() {
 
         subscribeViewModel()
         initView()
+
+        viewModel.fetchMarketData()
     }
 
     private fun subscribeViewModel() {
         lifecycleScope.launch {
-            viewModel.marketList
+            viewModel.commonEvent
                 .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .collectLatest {
-                    Log.d(LogTag.TAG_DEBUG, "data >> $it")
-                    homeMarketListFragment.updateItem(it)
-                }
-        }
-
-        lifecycleScope.launch {
-            viewModel.favoriteList
-                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .collectLatest {
-                    favoriteMarketListFragment.updateItem(it)
+                .collectLatest { event ->
+                    when (event) {
+                        is CommonEvent.ShowToast -> showToast(event.msg)
+                    }
                 }
         }
     }

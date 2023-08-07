@@ -14,7 +14,7 @@ class AppPreferences(context: Context): MarketDao {
         APP_PREFERENCE_NAME, Context.MODE_PRIVATE
     )
 
-    private val _favoriteMarketFlow: MutableStateFlow<List<Pair<String, String>>> = MutableStateFlow(emptyList())
+    private val _favoriteMarketFlow: MutableStateFlow<List<Pair<String, String>>> = MutableStateFlow(getFavoriteMarket())
 
     companion object {
         private val gson = Gson()
@@ -24,7 +24,7 @@ class AppPreferences(context: Context): MarketDao {
         private const val KEY_FAVORITE_MARKET_CURRENCY_PAIR = "KEY_FAVORITE_MARKET_CURRENCY_PAIR"
     }
 
-    override suspend fun getFavoriteMarket(): List<Pair<String, String>> {
+    override fun getFavoriteMarket(): List<Pair<String, String>> {
         return prefs.getString(KEY_FAVORITE_MARKET_CURRENCY_PAIR, null)
             ?.let {
                 gson.fromJson(it, object : TypeToken<List<Pair<String, String>>>(){}.type)

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.doachgosum.marketsampleapp.domain.model.MarketModel
 import com.doachgosum.marketsampleapp.domain.repository.MarketRepository
 import com.doachgosum.marketsampleapp.presentation.market.MarketItemUiState
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -13,43 +14,18 @@ class MainViewModel(
     private val marketRepository: MarketRepository
 ): ViewModel() {
 
+    private val _commonEvent: MutableSharedFlow<CommonEvent> = MutableSharedFlow()
+    val commonEvent = _commonEvent.asSharedFlow()
+
     private val _keywordFlow: MutableStateFlow<String?> = MutableStateFlow(null)
     val keywordFlow = _keywordFlow.asStateFlow()
 
-    private val _marketList: MutableStateFlow<List<MarketItemUiState>> = MutableStateFlow(emptyList())
-    val marketList = _marketList.asStateFlow()
-
-    val favoriteList: StateFlow<List<MarketItemUiState>> = combine(
-        _keywordFlow, _marketList, marketRepository.getFavoriteMarketFlow()
-    ) { keyword, all, favorites ->
-
-        all.filter { favorites.contains(it.market.currencyPair) }
-            .map { it.copy(isFavorite = favorites.contains(it.market.currencyPair)) }
-
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(3000),
-        initialValue = emptyList()
-    )
-
-    init {
+    fun fetchMarketData() {
         viewModelScope.launch {
-            _marketList.value = marketRepository.getAllMarket()
-                .map {
-                    MarketItemUiState(
-                        market = it,
-                        onFavoriteClick = { market, toBe ->  onFavoriteClick(market, toBe) }
-                    )
+            marketRepository.fetchAllMarket {
+                viewModelScope.launch {
+                    _commonEvent.emit(CommonEvent.ShowToast(msg = "데이터를 불러오지 못했어요."))
                 }
-        }
-    }
-
-    private fun onFavoriteClick(market: MarketModel, toBeFavorite: Boolean) {
-        viewModelScope.launch {
-            if (toBeFavorite) {
-                marketRepository.saveFavoriteMarket(market.currencyPair)
-            } else {
-                marketRepository.deleteFavoriteMarket(market.currencyPair)
             }
         }
     }

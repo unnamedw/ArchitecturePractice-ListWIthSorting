@@ -16,9 +16,9 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/frame_filter_name"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:gravity="center"
+            android:gravity="start|center_vertical"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/frame_filter_price"
             app:layout_constraintTop_toTopOf="parent"
@@ -32,15 +32,16 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="8dp"
                 android:layout_height="16dp"
-                android:src="@{state.name.iconResId}"/>
+                android:layout_marginStart="4dp"
+                app:imageResource="@{state.name.iconResId}"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/frame_filter_price"
             android:layout_width="80dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:gravity="center"
+            android:gravity="start|center_vertical"
             app:layout_constraintEnd_toStartOf="@+id/frame_filter_change"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
@@ -53,15 +54,16 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="8dp"
                 android:layout_height="16dp"
-                android:src="@{state.price.iconResId}"/>
+                android:layout_marginStart="4dp"
+                app:imageResource="@{state.price.iconResId}"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/frame_filter_change"
             android:layout_width="80dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:gravity="center"
+            android:gravity="start|center_vertical"
             app:layout_constraintEnd_toStartOf="@id/frame_filter_volume"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
@@ -74,15 +76,16 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="8dp"
                 android:layout_height="16dp"
-                android:src="@{state.change.iconResId}"/>
+                android:layout_marginStart="4dp"
+                app:imageResource="@{state.change.iconResId}"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/frame_filter_volume"
             android:layout_width="65dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:gravity="center"
+            android:gravity="start|center_vertical"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent">
@@ -95,7 +98,8 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:layout_width="8dp"
                 android:layout_height="16dp"
-                android:src="@{state.volume.iconResId}"/>
+                android:layout_marginStart="4dp"
+                app:imageResource="@{state.volume.iconResId}"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

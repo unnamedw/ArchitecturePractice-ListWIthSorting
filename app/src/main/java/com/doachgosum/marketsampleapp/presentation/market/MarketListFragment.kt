@@ -11,20 +11,21 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.doachgosum.marketsampleapp.databinding.LayoutMarketListBinding
+import com.doachgosum.marketsampleapp.presentation.util.getAppContainer
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 class MarketListFragment: Fragment() {
+    private val listType: ListType by lazy {
+        requireArguments().getSerializable(PARAM_LIST_TYPE) as ListType
+    }
 
     private lateinit var binding: LayoutMarketListBinding
-    private lateinit var viewModel: MarketListViewModel
+    private val viewModel: MarketListViewModel by viewModels {
+        MarketListViewModel.Factory(listType, getAppContainer().marketRepository)
+    }
 
     private val marketListAdapter: MarketListAdapter by lazy { MarketListAdapter() }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        viewModel = ViewModelProvider(this, MarketListViewModel.Factory())[MarketListViewModel::class.java]
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         binding = LayoutMarketListBinding.inflate(inflater, container, false).apply {
@@ -39,14 +40,6 @@ class MarketListFragment: Fragment() {
 
     private fun subscribeViewModel() {
 
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            viewModel.sortState
-//                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-//                .collectLatest {
-//                    binding.frameMarketFilter.state = it
-//                }
-//        }
-
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.marketListItems
                 .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
@@ -60,8 +53,13 @@ class MarketListFragment: Fragment() {
         binding.rvMarketList.adapter = marketListAdapter
     }
 
-    fun updateItem(newItems: List<MarketItemUiState>) {
-        viewModel.updateList(newItems)
+    companion object {
+        private const val PARAM_LIST_TYPE = "param_list_type"
+        fun newInstance(listType: ListType) = MarketListFragment().apply {
+            arguments = Bundle().apply {
+                putSerializable(PARAM_LIST_TYPE, listType)
+            }
+        }
     }
 
 }
