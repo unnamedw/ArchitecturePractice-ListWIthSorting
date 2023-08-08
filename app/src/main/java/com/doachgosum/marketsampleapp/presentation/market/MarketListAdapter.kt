@@ -6,6 +6,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.doachgosum.marketsampleapp.databinding.ViewHolderMarketItemBinding
 
+/**
+ * ListAdapter 를 사용하는 경우, 정렬 시 스크롤 위치가 어중간하게 위치하는 현상이 발생함.
+ * **/
 class MarketListAdapter: RecyclerView.Adapter<MarketItemViewHolder>() {
 
     private var items: List<MarketItemUiState> = emptyList()
