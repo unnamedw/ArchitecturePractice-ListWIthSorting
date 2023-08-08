@@ -3,34 +3,31 @@ package com.doachgosum.marketsampleapp.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.doachgosum.marketsampleapp.domain.model.MarketModel
 import com.doachgosum.marketsampleapp.domain.repository.MarketRepository
-import com.doachgosum.marketsampleapp.presentation.market.MarketItemUiState
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class MainViewModel(
     private val marketRepository: MarketRepository
 ): ViewModel() {
 
-    private val _marketList: MutableStateFlow<List<MarketItemUiState>> = MutableStateFlow(emptyList())
-    val marketList = _marketList.asStateFlow()
+    private val _commonEvent: MutableSharedFlow<CommonEvent> = MutableSharedFlow()
+    val commonEvent = _commonEvent.asSharedFlow()
 
-    init {
+    private val _query: MutableStateFlow<String?> = MutableStateFlow(null)
+    val query = _query.asStateFlow()
+
+    fun fetchMarketData() {
         viewModelScope.launch {
-            _marketList.value = marketRepository.getAllMarket()
-                .map {
-                    MarketItemUiState(
-                        market = it,
-                        onFavoriteClick = ::onFavoriteClick
-                    )
-                }
+            marketRepository.fetchAllMarket(::handleFetchError)
         }
     }
 
-    private fun onFavoriteClick(market: MarketModel) {
-
+    private fun handleFetchError(throwable: Throwable) {
+        viewModelScope.launch {
+            throwable.printStackTrace()
+            _commonEvent.emit(CommonEvent.ShowToast(msg = "데이터를 불러오지 못했어요."))
+        }
     }
 
     class Factory(

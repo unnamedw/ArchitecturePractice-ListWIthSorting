@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <import type="com.doachgosum.marketsampleapp.presentation.market.MarketSortState.FilterType"/>
+        <variable
+            name="state"
+            type="com.doachgosum.marketsampleapp.presentation.market.MarketSortState" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/frame_filter_name"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="start|center_vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/frame_filter_price"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="가상자산명"
+                android:textColor="@color/gray_900"
+                style="@style/Subhead01"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="8dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="4dp"
+                app:imageResource="@{state.filterType==FilterType.NAME ? state.sortType.iconResId : state.SortType.NONE.iconResId}"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/frame_filter_price"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="start|center_vertical"
+            app:layout_constraintEnd_toStartOf="@+id/frame_filter_change"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="현재가"
+                android:textColor="@color/gray_900"
+                style="@style/Subhead01"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="8dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="4dp"
+                app:imageResource="@{state.filterType==FilterType.PRICE ? state.sortType.iconResId : state.SortType.NONE.iconResId}"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/frame_filter_change"
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="start|center_vertical"
+            app:layout_constraintEnd_toStartOf="@id/frame_filter_volume"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="24시간"
+                android:textColor="@color/gray_900"
+                style="@style/Subhead01"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="8dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="4dp"
+                app:imageResource="@{state.filterType==FilterType.CHANGE ? state.sortType.iconResId : state.SortType.NONE.iconResId}"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/frame_filter_volume"
+            android:layout_width="65dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="start|center_vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="거래대금"
+                android:textColor="@color/gray_900"
+                style="@style/Subhead01"/>
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="8dp"
+                android:layout_height="16dp"
+                android:layout_marginStart="4dp"
+                app:imageResource="@{state.filterType==FilterType.VOLUME ? state.sortType.iconResId : state.SortType.NONE.iconResId}"/>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,23 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <FrameLayout
-        android:id="@+id/frame_filter"
+<layout>
+    <data>
+        <variable
+            name="vm"
+            type="com.doachgosum.marketsampleapp.presentation.market.MarketListViewModel" />
+    </data>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:background="@color/black"/>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_market_list"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        xmlns:bind="http://schemas.android.com/apk/res-auto"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+        <include
+            android:id="@+id/frame_market_filter"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            layout="@layout/layout_market_filter"
+            bind:state="@{vm.sortState}"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_market_list"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</layout>

@@ -16,7 +16,7 @@ class MarketItemViewHolder(
     @SuppressLint("SetTextI18n")
     fun bind(item: MarketItemUiState) {
         binding.frameFavorite.setOnClickListener {
-            item.onFavoriteClick.invoke(item.market)
+            item.onFavoriteClick.invoke(item.market, !item.isFavorite)
         }
 
         val favoriteResId = when {

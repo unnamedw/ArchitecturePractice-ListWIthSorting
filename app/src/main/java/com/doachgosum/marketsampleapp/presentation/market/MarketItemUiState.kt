@@ -2,11 +2,12 @@ package com.doachgosum.marketsampleapp.presentation.market
 
 import com.doachgosum.marketsampleapp.R
 import com.doachgosum.marketsampleapp.domain.model.MarketModel
+import com.doachgosum.marketsampleapp.domain.model.MarketModelWithFavorite
 
 data class MarketItemUiState(
     val market: MarketModel,
     val isFavorite: Boolean = false,
-    val onFavoriteClick: (MarketModel) -> Unit
+    val onFavoriteClick: (market: MarketModel, toBe: Boolean) -> Unit
 ) {
 
     val signTextColorResId: Int = when {
@@ -15,4 +16,14 @@ data class MarketItemUiState(
         else -> R.color.gray_900
     }
 
+}
+
+fun MarketModelWithFavorite.toMarketItemUiState(
+    onFavoriteClick: (market: MarketModel, toBe: Boolean) -> Unit
+): MarketItemUiState {
+    return MarketItemUiState(
+        market = marketModel,
+        isFavorite = favorite,
+        onFavoriteClick
+    )
 }

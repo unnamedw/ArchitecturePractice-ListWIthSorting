@@ -18,7 +18,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="start"
-            style="@style/Subhead02"
+            style="@style/Body02"
             android:textColor="@color/gray_900"
             android:layout_marginEnd="4dp"
             android:ellipsize="end"
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:gravity="end"
-            style="@style/Subhead02"
+            style="@style/Body02"
             android:textColor="@color/gray_600"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/frame_change"/>
@@ -51,14 +51,14 @@
                 android:id="@+id/tv_change_percent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Subhead02"
+                style="@style/Body02"
                 android:textColor="@color/gray_600"
                 android:gravity="end"/>
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_change_amount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Subhead01"
+                style="@style/Body01"
                 android:textColor="@color/gray_600"
                 android:gravity="end"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
@@ -76,14 +76,14 @@
                 android:id="@+id/tv_volume"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Subhead02"
+                style="@style/Body02"
                 android:textColor="@color/gray_900"
                 android:gravity="end"/>
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_volume_unit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Subhead02"
+                style="@style/Body02"
                 android:textColor="@color/gray_500"
                 android:gravity="end"/>
         </androidx.appcompat.widget.LinearLayoutCompat>

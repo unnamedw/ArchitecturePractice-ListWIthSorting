@@ -4,9 +4,11 @@ import kotlinx.coroutines.flow.Flow
 
 interface MarketDao {
 
-    suspend fun getFavoriteMarket(): List<Pair<String, String>>
+    fun getFavoriteMarket(): List<Pair<String, String>>
 
     suspend fun saveFavoriteMarket(currencyPair: Pair<String, String>)
+    
+    suspend fun deleteFavoriteMarket(currencyPair: Pair<String, String>)
 
     fun getFavoriteMarketFlow(): Flow<List<Pair<String, String>>>
 

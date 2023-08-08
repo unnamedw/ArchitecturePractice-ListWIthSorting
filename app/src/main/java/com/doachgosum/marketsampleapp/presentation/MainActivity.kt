@@ -3,19 +3,16 @@ package com.doachgosum.marketsampleapp.presentation
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
-import android.window.OnBackInvokedCallback
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.addCallback
 import androidx.activity.viewModels
-import androidx.core.app.NotificationManagerCompat
+import androidx.core.os.bundleOf
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
 import com.doachgosum.marketsampleapp.constant.LogTag
 import com.doachgosum.marketsampleapp.databinding.ActivityMainBinding
-import com.doachgosum.marketsampleapp.presentation.market.MarketListView
+import com.doachgosum.marketsampleapp.presentation.market.ListType
+import com.doachgosum.marketsampleapp.presentation.market.MarketListFragment
 import com.doachgosum.marketsampleapp.presentation.util.getAppContainer
 import com.doachgosum.marketsampleapp.presentation.util.showToast
 import com.google.android.material.tabs.TabLayoutMediator
@@ -29,8 +26,8 @@ class MainActivity : AppCompatActivity() {
         MainViewModel.Factory(getAppContainer().marketRepository)
     }
 
-    private val homeMarketListView: MarketListView by lazy { MarketListView(this) }
-    private val favoriteMarketListView: MarketListView by lazy { MarketListView(this) }
+    private val homeMarketListFragment: MarketListFragment by lazy { MarketListFragment.newInstance(ListType.Main) }
+    private val favoriteMarketListFragment: MarketListFragment by lazy { MarketListFragment.newInstance(ListType.Favorite) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,21 +36,43 @@ class MainActivity : AppCompatActivity() {
 
         subscribeViewModel()
         initView()
+
+        viewModel.fetchMarketData()
     }
 
     private fun subscribeViewModel() {
         lifecycleScope.launch {
-            viewModel.marketList
+            viewModel.commonEvent
                 .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .collectLatest {
-                    Log.d(LogTag.TAG_DEBUG, "data >> $it")
-                    homeMarketListView.updateItem(it)
+                .collectLatest { event ->
+                    when (event) {
+                        is CommonEvent.ShowToast -> showToast(event.msg)
+                    }
                 }
         }
     }
 
     private fun initView() {
-        binding.vpContents.adapter = MainPagerAdapter(homeMarketListView, favoriteMarketListView)
+        setUpViewPager()
+
+        binding.etSearch.doAfterTextChanged {
+            supportFragmentManager.setFragmentResult(
+                homeMarketListFragment.KEY_QUERY,
+                MarketListFragment.createQueryBundle(it.toString())
+            )
+            supportFragmentManager.setFragmentResult(
+                favoriteMarketListFragment.KEY_QUERY,
+                MarketListFragment.createQueryBundle(it.toString())
+            )
+        }
+    }
+
+    private fun setUpViewPager() {
+        binding.vpContents.adapter = MainPagerAdapter(
+            supportFragmentManager,
+            lifecycle,
+            homeMarketListFragment, favoriteMarketListFragment
+        )
 
         val tabTitle = listOf("마켓", "즐겨찾기")
         TabLayoutMediator(binding.tabLayout, binding.vpContents) { tab, index ->
