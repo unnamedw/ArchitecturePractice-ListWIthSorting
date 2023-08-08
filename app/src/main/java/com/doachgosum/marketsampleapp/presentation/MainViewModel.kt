@@ -14,9 +14,6 @@ class MainViewModel(
     private val _commonEvent: MutableSharedFlow<CommonEvent> = MutableSharedFlow()
     val commonEvent = _commonEvent.asSharedFlow()
 
-    private val _query: MutableStateFlow<String?> = MutableStateFlow(null)
-    val query = _query.asStateFlow()
-
     fun fetchMarketData() {
         viewModelScope.launch {
             marketRepository.fetchAllMarket(::handleFetchError)
