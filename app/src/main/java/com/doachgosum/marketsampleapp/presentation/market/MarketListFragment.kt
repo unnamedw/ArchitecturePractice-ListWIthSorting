@@ -13,7 +13,6 @@ import com.doachgosum.marketsampleapp.databinding.LayoutMarketListBinding
 import com.doachgosum.marketsampleapp.presentation.util.getAppContainer
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
 class MarketListFragment: Fragment() {

@@ -19,21 +19,21 @@ class MarketListViewModel(
     private val _sortState: MutableStateFlow<MarketSortState> = MutableStateFlow(MarketSortState())
     val sortState = _sortState.asStateFlow()
 
-    val marketListItems: StateFlow<List<MarketItemUiState>> = when (listType) {
+    private val marketListSource = when (listType) {
         ListType.Main -> marketRepository.observeAllMarket()
         ListType.Favorite -> marketRepository.observeFavoriteMarket()
-    }.map { list ->
-        list.map { it.toMarketItemUiState(::onFavoriteClick) }
-    }.map { list ->
-        // 기본 정렬은 거래량 내림차순 처리
-        list.sortedByDescending { it.market.volume }
-    }.combine(_sortState) { marketList, sort ->
-        marketList.sorted(sort)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = emptyList()
-    )
+    }
+
+    val marketListItems: StateFlow<List<MarketItemUiState>> = marketListSource
+        .map { list -> list.map { it.toMarketItemUiState(::onFavoriteClick) } }
+        // 기본 정렬
+        .map { list -> list.sortedByDescending { it.market.volume } }
+        .combine(_sortState) { marketList, sort -> marketList.sorted(sort) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5000),
+                initialValue = emptyList()
+            )
 
     private fun onFavoriteClick(market: MarketModel, toBeFavorite: Boolean) {
         viewModelScope.launch {
@@ -52,7 +52,7 @@ class MarketListViewModel(
         }
     }
 
-    fun deleteFavoriteMarket(currency: Pair<String, String>) {
+    private fun deleteFavoriteMarket(currency: Pair<String, String>) {
         viewModelScope.launch {
             marketRepository.deleteFavoriteMarket(currency)
         }
