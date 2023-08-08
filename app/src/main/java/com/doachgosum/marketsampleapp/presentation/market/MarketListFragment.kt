@@ -12,6 +12,7 @@ import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.doachgosum.marketsampleapp.databinding.LayoutMarketListBinding
 import com.doachgosum.marketsampleapp.presentation.util.getAppContainer
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -39,6 +40,22 @@ class MarketListFragment: Fragment() {
     }
 
     private fun subscribeViewModel() {
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.event
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collectLatest { event ->
+                    when (event) {
+                        is MarketListPageEvent.ShowUndoSnackBar -> {
+                            Snackbar.make(binding.root, event.msg, Snackbar.LENGTH_LONG)
+                            .setAction("추가") {
+                                viewModel.saveFavoriteMarket(event.market.currencyPair)
+                            }
+                            .show()
+                        }
+                    }
+                }
+        }
 
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.marketListItems

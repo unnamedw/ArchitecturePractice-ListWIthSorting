@@ -5,18 +5,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.doachgosum.marketsampleapp.domain.model.MarketModel
 import com.doachgosum.marketsampleapp.domain.repository.MarketRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class MarketListViewModel(
     private val listType: ListType,
     private val marketRepository: MarketRepository
 ): ViewModel() {
+
+    private val _event: MutableSharedFlow<MarketListPageEvent> = MutableSharedFlow()
+    val event = _event.asSharedFlow()
 
     val marketListItems: StateFlow<List<MarketItemUiState>> = when (listType) {
         ListType.Main -> marketRepository.observeAllMarket()
@@ -38,10 +36,23 @@ class MarketListViewModel(
     private fun onFavoriteClick(market: MarketModel, toBeFavorite: Boolean) {
         viewModelScope.launch {
             if (toBeFavorite) {
-                marketRepository.saveFavoriteMarket(market.currencyPair)
+                saveFavoriteMarket(market.currencyPair)
             } else {
-                marketRepository.deleteFavoriteMarket(market.currencyPair)
+                deleteFavoriteMarket(market.currencyPair)
+                _event.emit(MarketListPageEvent.ShowUndoSnackBar(market, "해당 마켓을 다시 추가하시겠어요?"))
             }
+        }
+    }
+
+    fun saveFavoriteMarket(currency: Pair<String, String>) {
+        viewModelScope.launch {
+            marketRepository.saveFavoriteMarket(currency)
+        }
+    }
+
+    fun deleteFavoriteMarket(currency: Pair<String, String>) {
+        viewModelScope.launch {
+            marketRepository.deleteFavoriteMarket(currency)
         }
     }
 
