@@ -16,6 +16,8 @@ class MarketListViewModel(
     private val _event: MutableSharedFlow<MarketListPageEvent> = MutableSharedFlow()
     val event = _event.asSharedFlow()
 
+    private val _query: MutableStateFlow<String?> = MutableStateFlow(null)
+
     private val _sortState: MutableStateFlow<MarketSortState> = MutableStateFlow(MarketSortState())
     val sortState = _sortState.asStateFlow()
 
@@ -28,6 +30,7 @@ class MarketListViewModel(
         .map { list -> list.map { it.toMarketItemUiState(::onFavoriteClick) } }
         // 기본 정렬
         .map { list -> list.sortedByDescending { it.market.volume } }
+        .combine(_query) { marketList, query -> marketList.queried(query) }
         .combine(_sortState) { marketList, sort -> marketList.sorted(sort) }
             .stateIn(
                 scope = viewModelScope,
@@ -67,6 +70,10 @@ class MarketListViewModel(
         }
     }
 
+    fun setQuery(query: String?) {
+        _query.value = query
+    }
+
     class Factory(
         private val listType: ListType,
         private val marketRepository: MarketRepository
@@ -74,6 +81,16 @@ class MarketListViewModel(
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return MarketListViewModel(listType, marketRepository) as T
         }
+    }
+}
+
+fun List<MarketItemUiState>.queried(query: String?): List<MarketItemUiState> {
+    if (query.isNullOrBlank())
+        return this
+
+    return filter {
+        it.market.currencyPair.first.contains(query, true)
+                || it.market.currencyPair.second.contains(query, true)
     }
 }
 

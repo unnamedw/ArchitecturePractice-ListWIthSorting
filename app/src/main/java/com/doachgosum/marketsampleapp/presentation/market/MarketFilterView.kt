@@ -6,6 +6,9 @@ import android.view.LayoutInflater
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.doachgosum.marketsampleapp.databinding.LayoutMarketFilterBinding
 
+/**
+ * TODO("Filter View 모듈화")
+ * **/
 class MarketFilterView: ConstraintLayout {
 
     private val binding: LayoutMarketFilterBinding = LayoutMarketFilterBinding.inflate(

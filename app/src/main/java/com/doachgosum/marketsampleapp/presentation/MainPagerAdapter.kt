@@ -2,12 +2,15 @@ package com.doachgosum.marketsampleapp.presentation
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
 
 class MainPagerAdapter(
-    fa: FragmentActivity,
+    fm: FragmentManager,
+    lifecycle: Lifecycle,
     vararg page: Fragment
-): FragmentStateAdapter(fa) {
+): FragmentStateAdapter(fm, lifecycle) {
 
     private val pages: List<Fragment>
 

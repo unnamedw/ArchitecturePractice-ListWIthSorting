@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import com.doachgosum.marketsampleapp.constant.LogTag
 import com.doachgosum.marketsampleapp.databinding.ViewHolderMarketItemBinding
 
 class MarketListAdapter: ListAdapter<MarketItemUiState, MarketItemViewHolder>(DIFF_CALLBACK) {
@@ -21,7 +20,6 @@ class MarketListAdapter: ListAdapter<MarketItemUiState, MarketItemViewHolder>(DI
     }
 
     override fun onBindViewHolder(holder: MarketItemViewHolder, position: Int) {
-        Log.d(LogTag.TAG_DEBUG, "onMarketListItemBind")
         holder.bind(getItem(position))
     }
 

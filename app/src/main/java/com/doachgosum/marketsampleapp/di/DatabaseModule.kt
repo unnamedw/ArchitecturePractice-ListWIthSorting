@@ -4,6 +4,9 @@ import android.content.Context
 import androidx.room.Room
 import com.doachgosum.marketsampleapp.data.local.AppDatabase
 
+/**
+ * TODO("추후 로컬 캐싱 개선 시 DB로 이전")
+ * **/
 object DatabaseModule {
 
     private var db: AppDatabase? = null

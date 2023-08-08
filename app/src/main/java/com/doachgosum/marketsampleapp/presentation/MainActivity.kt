@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.viewModels
+import androidx.core.os.bundleOf
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -24,8 +26,8 @@ class MainActivity : AppCompatActivity() {
         MainViewModel.Factory(getAppContainer().marketRepository)
     }
 
-    private val homeMarketListFragment: MarketListFragment = MarketListFragment.newInstance(ListType.Main)
-    private val favoriteMarketListFragment: MarketListFragment = MarketListFragment.newInstance(ListType.Favorite)
+    private val homeMarketListFragment: MarketListFragment by lazy { MarketListFragment.newInstance(ListType.Main) }
+    private val favoriteMarketListFragment: MarketListFragment by lazy { MarketListFragment.newInstance(ListType.Favorite) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +53,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        binding.vpContents.adapter = MainPagerAdapter(this, homeMarketListFragment, favoriteMarketListFragment)
+        setUpViewPager()
+
+        binding.etSearch.doAfterTextChanged {
+            supportFragmentManager.setFragmentResult(
+                homeMarketListFragment.KEY_QUERY,
+                MarketListFragment.createQueryBundle(it.toString())
+            )
+            supportFragmentManager.setFragmentResult(
+                favoriteMarketListFragment.KEY_QUERY,
+                MarketListFragment.createQueryBundle(it.toString())
+            )
+        }
+    }
+
+    private fun setUpViewPager() {
+        binding.vpContents.adapter = MainPagerAdapter(
+            supportFragmentManager,
+            lifecycle,
+            homeMarketListFragment, favoriteMarketListFragment
+        )
 
         val tabTitle = listOf("마켓", "즐겨찾기")
         TabLayoutMediator(binding.tabLayout, binding.vpContents) { tab, index ->
