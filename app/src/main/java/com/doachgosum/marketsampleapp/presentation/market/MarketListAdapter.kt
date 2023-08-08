@@ -1,13 +1,20 @@
 package com.doachgosum.marketsampleapp.presentation.market
 
-import android.util.Log
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.doachgosum.marketsampleapp.databinding.ViewHolderMarketItemBinding
 
-class MarketListAdapter: ListAdapter<MarketItemUiState, MarketItemViewHolder>(DIFF_CALLBACK) {
+class MarketListAdapter: RecyclerView.Adapter<MarketItemViewHolder>() {
+
+    private var items: List<MarketItemUiState> = emptyList()
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun submitList(newItems: List<MarketItemUiState>) {
+        this.items = newItems
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MarketItemViewHolder {
         return MarketItemViewHolder(
@@ -19,20 +26,11 @@ class MarketListAdapter: ListAdapter<MarketItemUiState, MarketItemViewHolder>(DI
         )
     }
 
-    override fun onBindViewHolder(holder: MarketItemViewHolder, position: Int) {
-        holder.bind(getItem(position))
+    override fun getItemCount(): Int {
+        return items.size
     }
 
-    companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<MarketItemUiState>() {
-            override fun areItemsTheSame(oldItem: MarketItemUiState, newItem: MarketItemUiState): Boolean {
-                return oldItem.market.currencyPair == newItem.market.currencyPair
-            }
-
-            override fun areContentsTheSame(oldItem: MarketItemUiState, newItem: MarketItemUiState): Boolean {
-                return oldItem == newItem
-            }
-
-        }
+    override fun onBindViewHolder(holder: MarketItemViewHolder, position: Int) {
+        holder.bind(items[position])
     }
 }
