@@ -7,13 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.doachgosum.marketsampleapp.databinding.LayoutMarketListBinding
 import com.doachgosum.marketsampleapp.presentation.util.getAppContainer
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.launch
 
 class MarketListFragment: Fragment() {
@@ -64,10 +64,24 @@ class MarketListFragment: Fragment() {
                     marketListAdapter.submitList(it)
                 }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.sortState
+                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collectLatest {
+                    binding.frameMarketFilter.state = it
+                }
+        }
     }
 
     private fun initView() {
         binding.rvMarketList.adapter = marketListAdapter
+        binding.frameMarketFilter.apply {
+            frameFilterName.setOnClickListener { viewModel.clickFilter(MarketSortState.FilterType.NAME) }
+            frameFilterPrice.setOnClickListener { viewModel.clickFilter(MarketSortState.FilterType.PRICE) }
+            frameFilterChange.setOnClickListener { viewModel.clickFilter(MarketSortState.FilterType.CHANGE) }
+            frameFilterVolume.setOnClickListener { viewModel.clickFilter(MarketSortState.FilterType.VOLUME) }
+        }
     }
 
     companion object {

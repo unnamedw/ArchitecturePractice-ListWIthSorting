@@ -16,22 +16,24 @@ class MarketListViewModel(
     private val _event: MutableSharedFlow<MarketListPageEvent> = MutableSharedFlow()
     val event = _event.asSharedFlow()
 
+    private val _sortState: MutableStateFlow<MarketSortState> = MutableStateFlow(MarketSortState())
+    val sortState = _sortState.asStateFlow()
+
     val marketListItems: StateFlow<List<MarketItemUiState>> = when (listType) {
         ListType.Main -> marketRepository.observeAllMarket()
         ListType.Favorite -> marketRepository.observeFavoriteMarket()
     }.map { list ->
         list.map { it.toMarketItemUiState(::onFavoriteClick) }
     }.map { list ->
-        // 기본 정렬을 거래량 내림차순 처리
+        // 기본 정렬은 거래량 내림차순 처리
         list.sortedByDescending { it.market.volume }
+    }.combine(_sortState) { marketList, sort ->
+        marketList.sorted(sort)
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
         initialValue = emptyList()
     )
-
-    private val _sortState: MutableStateFlow<MarketSortState> = MutableStateFlow(MarketSortState())
-    val sortState = _sortState.asStateFlow()
 
     private fun onFavoriteClick(market: MarketModel, toBeFavorite: Boolean) {
         viewModelScope.launch {
@@ -56,13 +58,14 @@ class MarketListViewModel(
         }
     }
 
-    fun clickSortByName() {}
-
-    fun clickSortByPrice() {}
-
-    fun clickSortByChange() {}
-
-    fun clickSortByVolume() {}
+    fun clickFilter(filterType: MarketSortState.FilterType) {
+        _sortState.value = _sortState.value.let {
+            it.copy(
+                filterType = filterType,
+                sortType = it.sortType.next()
+            )
+        }
+    }
 
     class Factory(
         private val listType: ListType,
@@ -71,5 +74,46 @@ class MarketListViewModel(
         override fun <T : ViewModel> create(modelClass: Class<T>): T {
             return MarketListViewModel(listType, marketRepository) as T
         }
+    }
+}
+
+fun List<MarketItemUiState>.sorted(sortState: MarketSortState): List<MarketItemUiState> {
+    return when (sortState.filterType) {
+
+        MarketSortState.FilterType.NAME -> {
+            when (sortState.sortType) {
+                MarketSortState.SortType.ASC -> sortedBy { it.market.currencyPair.first }
+                    .sortedBy { it.market.currencyPair.second }
+                MarketSortState.SortType.DESC -> sortedByDescending { it.market.currencyPair.first }
+                    .sortedByDescending { it.market.currencyPair.second }
+                MarketSortState.SortType.NONE -> this
+            }
+        }
+
+        MarketSortState.FilterType.PRICE -> {
+            when (sortState.sortType) {
+                MarketSortState.SortType.ASC -> sortedBy { it.market.price }
+                MarketSortState.SortType.DESC -> sortedByDescending { it.market.price }
+                MarketSortState.SortType.NONE -> this
+            }
+        }
+
+        MarketSortState.FilterType.CHANGE -> {
+            when (sortState.sortType) {
+                MarketSortState.SortType.ASC -> sortedBy { it.market.changePercent }
+                MarketSortState.SortType.DESC -> sortedByDescending { it.market.changePercent }
+                MarketSortState.SortType.NONE -> this
+            }
+        }
+
+        MarketSortState.FilterType.VOLUME -> {
+            when (sortState.sortType) {
+                MarketSortState.SortType.ASC -> sortedBy { it.market.volume }
+                MarketSortState.SortType.DESC -> sortedByDescending { it.market.volume }
+                MarketSortState.SortType.NONE -> this
+            }
+        }
+
+        MarketSortState.FilterType.NONE -> this
     }
 }
