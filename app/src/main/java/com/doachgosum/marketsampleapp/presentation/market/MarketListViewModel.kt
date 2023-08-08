@@ -65,7 +65,7 @@ class MarketListViewModel(
         _sortState.value = _sortState.value.let {
             it.copy(
                 filterType = filterType,
-                sortType = it.sortType.next()
+                sortType = if (filterType == it.filterType) it.sortType.next() else MarketSortState.SortType.DESC
             )
         }
     }
