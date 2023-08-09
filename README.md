@@ -1,6 +1,6 @@
 # MarketAppSample
 
-![mediasearchapp_architecture_flow (1)](https://github.com/unnamedw/MarketAppSample/assets/56429036/6b4b2374-43ce-4368-95a2-e0bd68358223)
+![259295014-6b4b2374-43ce-4368-95a2-e0bd68358223](https://github.com/unnamedw/MarketAppSample/assets/56429036/39169bd6-467e-4297-83c2-9c905cc5c542)
 
 
 기본적인 구조는 [권장 아키텍처](https://developer.android.com/topic/architecture?hl=ko) 를 따르고 있습니다.
