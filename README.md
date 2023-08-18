@@ -1,4 +1,4 @@
-# MarketAppSample
+# ArchitecturePractice
 
 ![259295014-6b4b2374-43ce-4368-95a2-e0bd68358223](https://github.com/unnamedw/MarketAppSample/assets/56429036/39169bd6-467e-4297-83c2-9c905cc5c542)
 
