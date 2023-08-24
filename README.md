@@ -19,6 +19,6 @@
 
 ## Git
 
-보통 현업에서는 main, develop, feature, release, hotfix의 형태로 브랜치를 나누어 PR 리뷰 후 merge 하는 방식으로 사용합니다.
+보통 main, develop, feature, release, hotfix의 형태로 브랜치를 나누어 PR 리뷰 후 merge 하는 방식으로 사용합니다.
 
-다만, 본 과제에서는 빠른 작업 진행을 위해 main, develop으로 나누어 작업하였습니다.
+다만, 본 프로젝트에서는 편의를 위해 main, develop으로 나누어 작업하였습니다.
